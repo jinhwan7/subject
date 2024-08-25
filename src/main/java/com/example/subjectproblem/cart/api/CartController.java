@@ -2,12 +2,12 @@ package com.example.subjectproblem.cart.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.subjectproblem.cart.domain.Cart;
-import com.example.subjectproblem.cart.dto.AddCartRequest;
-import com.example.subjectproblem.cart.dto.UpdateQuantityRequest;
-import com.example.subjectproblem.cart.dto.CartResponse;
+import com.example.subjectproblem.cart.api.AddCartRequest;
+import com.example.subjectproblem.cart.service.CartService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +19,7 @@ public class CartController {
 	@Autowired
 	private CartService cartService;
 
+	@PreAuthorize("isAuthenticated()")
 	@PostMapping("/add")
 	public ResponseEntity<GetCartResponse> addCart(@RequestBody AddCartRequest addCartRequest) {
 		Cart addedCart = cartService.addToCart(addCartRequest);

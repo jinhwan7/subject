@@ -12,11 +12,19 @@ import com.example.subjectproblem.customer.service.AuthenticationService;
 import com.example.subjectproblem.customer.service.SignupService;
 import com.example.subjectproblem.customer.util.JwtUtil;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Tag(name = "Authentication", description = "Authentication and registration APIs")
 public class CustomerController {
 
 	@Autowired
@@ -28,6 +36,14 @@ public class CustomerController {
 	@Autowired
 	private JwtUtil jwtUtil;
 
+	@Operation(summary = "Login", description = "Authenticate a user and return a JWT token")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Successful authentication",
+			content = {@Content(mediaType = "application/json",
+				schema = @Schema(implementation = AuthResponse.class))}),
+		@ApiResponse(responseCode = "400", description = "Invalid credentials",
+			content = @Content)
+	})
 	@PostMapping("/login")
 	public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
 
