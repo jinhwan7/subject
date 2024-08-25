@@ -2,6 +2,10 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.3'
 	id 'io.spring.dependency-management' version '1.1.6'
+
+	id "io.spring.javaformat" version "0.0.40"
+	id "checkstyle"
+
 }
 
 group = 'com.example'
@@ -35,6 +39,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 	// queryDsl
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
@@ -59,8 +64,33 @@ dependencies {
 	// database
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
+	//dotenv
+	implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+}
+
+def querydslDir = layout.buildDirectory.dir("generated/querydsl").get().asFile
+
+sourceSets {
+	main {
+		java {
+			srcDirs += [ querydslDir ]
+		}
+	}
+}
+
+configurations {
+	querydsl.extendsFrom compileClasspath
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.withType(JavaCompile).configureEach {
+	options.generatedSourceOutputDirectory.set(file(querydslDir))
+}
+
+tasks.named('clean') {
+	delete file(querydslDir)
+}
+
