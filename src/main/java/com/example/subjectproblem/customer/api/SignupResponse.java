@@ -7,8 +7,4 @@ public record SignupResponse(String result, String errorMessage) {
 		return new SignupResponse(result, null);
 	}
 
-	// 실패 응답 생성
-	public static SignupResponse failure(String errorMessage) {
-		return new SignupResponse(null, errorMessage);
-	}
 }

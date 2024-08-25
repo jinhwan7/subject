@@ -31,9 +31,9 @@ public class SignupServiceImpl implements SignupService {
 
 			return SignupResponse.success("회원가입 성공");
 		} catch (DataIntegrityViolationException e) {
-			return SignupResponse.failure("User already exists or invalid data");
+			throw new IllegalArgumentException("User already exists or invalid data", e);
 		} catch (Exception e) {
-			return SignupResponse.failure("An error occurred during signup");
+			throw new RuntimeException("Internal Server Error", e);
 		}
 
 	}

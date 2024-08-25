@@ -1,12 +1,18 @@
 package com.example.subjectproblem.customer.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.example.subjectproblem.cart.domain.Cart;
 import com.example.subjectproblem.customer.api.AuthRequest;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,7 +23,6 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "Customers")
-
 public class Customer {
 
 	@Id
@@ -29,6 +34,9 @@ public class Customer {
 
 	@Column(length = 1000)
 	private String password;
+
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	private List<Cart> carts = new ArrayList<>();
 
 	// 정적 팩토리 메서드
 	public static Customer from(AuthRequest signupRequest) {
